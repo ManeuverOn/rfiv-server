@@ -1,0 +1,26 @@
+{
+  "name": "rfiv-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "/src/index.js",
+  "scripts": {
+    "start": "node ./src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dj4zhang/rfiv-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dj4zhang/rfiv-server/issues"
+  },
+  "homepage": "https://github.com/dj4zhang/rfiv-server#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.11.11",
+    "morgan": "^1.10.0"
+  }
+}
