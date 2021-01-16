@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -13,6 +14,7 @@ const setupServer = async () => {
   // setup Express
   let app = express();
   app.use(logger("dev"));
+
   // include body parser
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
@@ -20,10 +22,10 @@ const setupServer = async () => {
   // connect to MongoDB
   try {
     // avoid MongooseJS deprecation warnings
-    mongoose.set('useNewUrlParser', true);
-    mongoose.set('useFindAndModify', false);
-    mongoose.set('useCreateIndex', true);
-    mongoose.set('useUnifiedTopology', true );
+    mongoose.set("useNewUrlParser", true);
+    mongoose.set("useFindAndModify", false);
+    mongoose.set("useCreateIndex", true);
+    mongoose.set("useUnifiedTopology", true);
     // connect to the DB server
     await mongoose.connect(conf.mongodb);
     console.log(`MongoDB connected: ${conf.mongodb}`);
@@ -31,24 +33,27 @@ const setupServer = async () => {
     console.log(err);
     process.exit(-1);
   }
-/*
+
   // import data models
   app.models = {
     Patient: require("./models/patient"),
   };
 
+  // allow CORS
+  app.use(cors());
+  
   // import routes
   require("./api")(app);
-*/
+
   // Give the API overview
   app.get("*", (req, res) => {
-    res.status(200).send("Welcome to the RFIV API page.");
+    res.status(200).send({ data: "Welcome" });
   });
 
   // run the server on specified port
   let server = app.listen(port, () => {
-      console.log(`RFIV listening on: ${server.address().port}`);
-    });
+    console.log(`RFIV listening on: ${server.address().port}`);
+  });
 };
 
 //////////////////////////////////////////////////////////////////////////////////
