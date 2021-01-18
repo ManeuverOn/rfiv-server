@@ -8,11 +8,11 @@ const Schema = mongoose.Schema;
 /* Schema for patient */
 let Patient = new Schema({
   name: { type: String, required: true },
-  id: { type: String, required: true },
-  tagId: { type: String },
+  id: { type: String, required: true, index: { unique: true } },
+  tagId: { type: String, index: { unique: true } },
 });
 
-Patient.pre("validate", function(next) {
+Patient.pre("validate", function (next) {
   // Sanitize strings
   this.name = this.name.replace(/<(?:.|\n)*?>/gm, "");
   this.id = this.id.replace(/<(?:.|\n)*?>/gm, "");

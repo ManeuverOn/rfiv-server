@@ -10,7 +10,7 @@ module.exports = (app) => {
    * @param {req.body.name} Name of patient
    * @param {req.body.id} ID of patient
    * @param {req.body.tagId} ID of RFIV Tag
-   * @return {201 with { id: ID of new patient entry }}
+   * @return {201 with { name, ID }} return patient name and ID
    */
   app.post("/v1/patient", async (req, res) => {
     let data;
@@ -38,7 +38,7 @@ module.exports = (app) => {
       // save patient entry to database
       let patient = new app.models.Patient(newPatient);
       await patient.save();
-      res.status(201).send({ id: patient._id });
+      res.status(201).send({ name: data.name, id: data.id });
     } catch (err) {
       console.log(`Patient.create save failure: ${err}`);
       res.status(400).send({ error: "failure creating patient entry" });
@@ -46,24 +46,36 @@ module.exports = (app) => {
   });
 
   /**
-   * Search for a patient entry by name
+   * Search for a patient entry by at least one of name, patient id, or tag ID
    *
-   * @param (req.params.name} Name of patient to search for
-   * @return {200} Patient information
+   * @param {req.query.name} Name of patient
+   * @param {req.query.id} ID of patient
+   * @param {req.query.tagId} ID of RFIV Tag
+   * @return {200 with { name, ID, tag ID }} return patient name, ID, and tag ID
    */
-  app.get("/v1/patient/:name", async (req, res) => {
-    try {
-      let patient = await app.models.Patient.find({
-        name: req.params.name,
-      });
-      if (!patient) {
-        res.status(404).send({ error: `Unknown patient: ${req.params.name}` });
-      } else {
-        res.status(200).send(patient);
+  app.get("/v1/patient", async (req, res) => {
+    if (req.query) {
+      const name = req.query.name;
+      const id = req.query.id;
+      const tagId = req.query.tagId;
+      const query = { name, id, tagId };
+      for (let field in query) {
+        if (query[field] === "" || query[field] === undefined) {
+          delete query[field];
+        }
       }
-    } catch (err) {
-      console.log(`Patient.get by name failure: ${err}`);
-      res.status(404).send({ error: `Unknown patient: ${req.params.name}` });
+      try {
+        let patient = await app.models.Patient.find(query);
+        if (patient.length === 0) {
+          res.status(404).send({ error: `Unknown patient` });
+        } else {
+          res.status(200).send(patient);
+        }
+      } catch (err) {
+        res.status(404).send({ error: `Patient.get failure: ${err}` });
+      }
+    } else {
+      res.status(404).send({ error: `Invalid query.` });
     }
   });
 };
