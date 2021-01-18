@@ -43,7 +43,12 @@ module.exports = (app) => {
       res.status(201).send({ name: data.name, id: data.id });
     } catch (err) {
       console.log(`Patient.create save failure: ${err}`);
-      res.status(400).send({ error: "failure creating patient entry" });
+      if (err.code === 11000) {
+        if (err.message.indexOf("id_1") !== -1)
+          res.status(400).send({ error: "Patient ID already in use" });
+        if (err.message.indexOf("tagId_1") !== -1)
+          res.status(400).send({ error: "Tag ID already in use" });
+      }
     }
   });
 
