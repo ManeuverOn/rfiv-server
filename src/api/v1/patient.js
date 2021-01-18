@@ -74,7 +74,7 @@ module.exports = (app) => {
       try {
         let patient = await app.models.Patient.find(query);
         if (patient.length === 0) {
-          res.status(404).send({ error: `Unknown patient` });
+          res.status(404).send({ error: `Patient not found.` });
         } else {
           res.status(200).send(patient);
         }
