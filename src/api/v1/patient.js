@@ -41,7 +41,7 @@ module.exports = (app) => {
       await patient.save();
       res.status(201).send({ name: data.name, id: data.id });
     } catch (err) {
-      if (err.code === 11000) {
+      if (err.code === 11000) { // duplicate patient ID or tag ID
         if (err.message.indexOf("id_1") !== -1)
           res.status(400).send({ error: "Patient ID already in use" });
         if (err.message.indexOf("tagId_1") !== -1)
@@ -64,13 +64,16 @@ module.exports = (app) => {
       const id = req.query.id;
       const tagId = req.query.tagId;
 
+      // name search is case insensitive
       const nameCaseInsensitive = new RegExp(name, "i");
       const query = { name: nameCaseInsensitive, id, tagId };
+      // remove empty query strings
       for (let field in query) {
         if (query[field] === "" || query[field] === undefined) {
           delete query[field];
         }
       }
+      // find all patient entries that match these query fields 
       try {
         let patient = await app.models.Patient.find(query);
         if (patient.length === 0) {
@@ -94,6 +97,7 @@ module.exports = (app) => {
    */
   app.get("/v1/patient/:id", async (req, res) => {
     const id = req.params.id;
+    // find one patient with this ID value
     try {
       let patient = await app.models.Patient.findOne({ id });
       if (!patient) {
