@@ -1,5 +1,7 @@
 "use strict";
 
+const { isEmpty } = require("../../shared");
+
 const Joi = require("joi");
 const mongoose = require("mongoose");
 
@@ -54,7 +56,7 @@ module.exports = (app) => {
    * @return {200 with { name, ID, tag ID }} return patient name, ID, and tag ID
    */
   app.get("/v1/patient", async (req, res) => {
-    if (req.query) {
+    if (!isEmpty(req.query)) {
       const name = req.query.name;
       const id = req.query.id;
       const tagId = req.query.tagId;
