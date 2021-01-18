@@ -63,7 +63,9 @@ module.exports = (app) => {
       const name = req.query.name;
       const id = req.query.id;
       const tagId = req.query.tagId;
-      const query = { name, id, tagId };
+
+      const nameCaseInsensitive = new RegExp(name, "i");
+      const query = { name: nameCaseInsensitive, id, tagId };
       for (let field in query) {
         if (query[field] === "" || query[field] === undefined) {
           delete query[field];
