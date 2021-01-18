@@ -26,7 +26,6 @@ module.exports = (app) => {
       data = await schema.validateAsync(req.body);
     } catch (err) {
       const message = err.details[0].message;
-      console.log(`Patient.create validation failure: ${message}`);
       return res.status(400).send({ error: message });
     }
 
@@ -42,7 +41,6 @@ module.exports = (app) => {
       await patient.save();
       res.status(201).send({ name: data.name, id: data.id });
     } catch (err) {
-      console.log(`Patient.create save failure: ${err}`);
       if (err.code === 11000) {
         if (err.message.indexOf("id_1") !== -1)
           res.status(400).send({ error: "Patient ID already in use" });
@@ -53,14 +51,14 @@ module.exports = (app) => {
   });
 
   /**
-   * Search for a patient entry by at least one of name, patient id, or tag ID
+   * Search for patients by at least one of name, patient id, or tag ID
    *
    * @param {req.query.name} Name of patient
    * @param {req.query.id} ID of patient
    * @param {req.query.tagId} ID of RFIV Tag
-   * @return {200 with { name, ID, tag ID }} return patient name, ID, and tag ID
+   * @return {200 with { name, ID, tag ID }} return patient names, IDs, and tag IDs
    */
-  app.get("/v1/patient", async (req, res) => {
+  app.get("/v1/patients", async (req, res) => {
     if (!isEmpty(req.query)) {
       const name = req.query.name;
       const id = req.query.id;
@@ -83,6 +81,27 @@ module.exports = (app) => {
       }
     } else {
       res.status(404).send({ error: `Invalid query.` });
+    }
+  });
+
+  /**
+   * Search for a patient entry by patient id
+   *
+   * @param {req.params.id} ID of patient
+   * @return {200 with { name, ID, tag ID }} return patient name, ID, and tag ID
+   */
+  app.get("/v1/patient/:id", async (req, res) => {
+    const id = req.params.id;
+    try {
+      let patient = await app.models.Patient.findOne({ id });
+      if (!patient) {
+        // patient doesn't exist
+        res.status(404).send({ error: `Patient not found.` });
+      } else {
+        res.status(200).send(patient);
+      }
+    } catch (err) {
+      res.status(404).send({ error: `Patient.get failure: ${err}` });
     }
   });
 };
