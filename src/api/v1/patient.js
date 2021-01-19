@@ -108,7 +108,7 @@ module.exports = (app) => {
 
   /**
    * Add a location to a patient associated with a tag ID
-   * 
+   *
    * @param {req.params.tagId} Tag ID of patient
    * @param {req.body.timestamp} time of tracker reading
    * @param {req.body.location} location of tracker reading
@@ -136,7 +136,8 @@ module.exports = (app) => {
         { tagId },
         { $push: { locations: [data.timestamp, data.location] } }
       );
-      if (!patient) { // tag ID doesn't exist
+      if (!patient) {
+        // tag ID doesn't exist
         res.status(404).send({ error: "Tag ID not found." });
       } else {
         res.status(204).send();
