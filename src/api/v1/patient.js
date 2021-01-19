@@ -21,7 +21,7 @@ module.exports = (app) => {
       let schema = Joi.object().keys({
         name: Joi.string().required(),
         id: Joi.string().required(),
-        tagId: Joi.string(),
+        tagId: Joi.string().required(),
       });
       data = await schema.validateAsync(req.body);
     } catch (err) {
