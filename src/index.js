@@ -41,13 +41,13 @@ const setupServer = async () => {
 
   // allow CORS
   app.use(cors());
-  
+
   // import routes
   require("./api")(app);
 
   // Give the API overview
   app.get("*", (req, res) => {
-    res.status(200).send({ data: "Welcome" });
+    res.status(200).send("Welcome to the RFIV API.");
   });
 
   // run the server on specified port
