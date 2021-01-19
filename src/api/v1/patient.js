@@ -12,16 +12,16 @@ module.exports = (app) => {
    * @param {req.body.name} Name of patient
    * @param {req.body.id} ID of patient
    * @param {req.body.tagId} ID of RFIV Tag
-   * @return {201 with { name, ID }} return patient name and ID
+   * @return {204, no body content} Return status only
    */
   app.post("/v1/patient", async (req, res) => {
     let data;
     try {
       // validate user input
       let schema = Joi.object().keys({
-        name: Joi.string().lowercase().required(),
-        id: Joi.string().lowercase().required(),
-        tagId: Joi.any(),
+        name: Joi.string().required(),
+        id: Joi.string().required(),
+        tagId: Joi.string(),
       });
       data = await schema.validateAsync(req.body);
     } catch (err) {
@@ -29,19 +29,14 @@ module.exports = (app) => {
       return res.status(400).send({ error: message });
     }
 
-    // set up patient entry
     try {
-      let newPatient = {
-        name: data.name,
-        id: data.id,
-        tagId: data.tagId,
-      };
       // save patient entry to database
-      let patient = new app.models.Patient(newPatient);
+      let patient = new app.models.Patient(data);
       await patient.save();
-      res.status(201).send({ name: data.name, id: data.id });
+      res.status(204).send();
     } catch (err) {
-      if (err.code === 11000) { // duplicate patient ID or tag ID
+      if (err.code === 11000) {
+        // duplicate patient ID or tag ID
         if (err.message.indexOf("id_1") !== -1)
           res.status(400).send({ error: "Patient ID already in use" });
         if (err.message.indexOf("tagId_1") !== -1)
@@ -73,11 +68,11 @@ module.exports = (app) => {
           delete query[field];
         }
       }
-      // find all patient entries that match these query fields 
+      // find all patient entries that match these query fields
       try {
         let patient = await app.models.Patient.find(query);
         if (patient.length === 0) {
-          res.status(404).send({ error: `Patient not found.` });
+          res.status(404).send({ error: "Patient not found." });
         } else {
           res.status(200).send(patient);
         }
@@ -85,7 +80,7 @@ module.exports = (app) => {
         res.status(404).send({ error: `Patient.get failure: ${err}` });
       }
     } else {
-      res.status(404).send({ error: `Invalid query.` });
+      res.status(404).send({ error: "Invalid query." });
     }
   });
 
@@ -108,6 +103,46 @@ module.exports = (app) => {
       }
     } catch (err) {
       res.status(404).send({ error: `Patient.get failure: ${err}` });
+    }
+  });
+
+  /**
+   * Add a location to a patient associated with a tag ID
+   * 
+   * @param {req.params.tagId} Tag ID of patient
+   * @param {req.body.timestamp} time of tracker reading
+   * @param {req.body.location} location of tracker reading
+   * @return {204, no body content} Return status only
+   */
+  app.post("/v1/patient/:tagId/location", async (req, res) => {
+    let data;
+    try {
+      // validate user input
+      let schema = Joi.object().keys({
+        timestamp: Joi.string().required(),
+        location: Joi.string().required(),
+      });
+      data = await schema.validateAsync(req.body);
+    } catch (err) {
+      const message = err.details[0].message;
+      return res.status(400).send({ error: message });
+    }
+
+    try {
+      const tagId = req.params.tagId;
+      console.log(tagId);
+      // find patient entry with this tag ID and add new tracking point to location
+      let patient = await app.models.Patient.findOneAndUpdate(
+        { tagId },
+        { $push: { locations: [data.timestamp, data.location] } }
+      );
+      if (!patient) { // tag ID doesn't exist
+        res.status(404).send({ error: "Tag ID not found." });
+      } else {
+        res.status(204).send();
+      }
+    } catch (err) {
+      res.status(400).send({ error: `Patient.post failure: ${err}` });
     }
   });
 };
