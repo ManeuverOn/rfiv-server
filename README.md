@@ -12,7 +12,7 @@ Installs the necessary packages.
 
 ### `npm start`
 
-Starts the server.\
+Starts the server.
 
 ## Available APIs
 
@@ -36,4 +36,4 @@ Adds a location datapoint to a patient entry associated with the specified tag I
 
 ## Interaction with the User Interface
 
-The code located in the [rfiv-ui repository](https://github.com/dj4zhang/rfiv-ui) serves as the frontend for the RFIV tracking app. This code handles the server logic for database transactions. Both `rfiv-ui` and `rfiv-server` must be running for the whole application to work.
+The code located in the [rfiv-ui repository](https://github.com/dj4zhang/rfiv-ui) serves as the frontend for the RFIV tracking app. The code in this repository handles the server logic for database transactions. Both `rfiv-ui` and `rfiv-server` must be running for the whole application to work.
