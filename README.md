@@ -16,7 +16,7 @@ Starts the server.
 
 ## Available APIs
 
-This code creates serveral API endpoints for saving and retrieving patient data from a MongoDB Atlas database. From the host `http://localhost:8080`, you can run:
+This code creates several API endpoints for saving and retrieving patient data from a MongoDB Atlas database. From the host `http://localhost:8080`, you can run:
 
 ### `GET /v1/patients?name=&id=&tagId=`
 
