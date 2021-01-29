@@ -4,6 +4,14 @@
 
 `Note`: Node.js is required to run this code. Download it at https://nodejs.org/en/.
 
+`Note`: The server connects to a MongoDB Atlas cluster. You need to add a `config.json` file to this directory with the following structure:
+```JSON
+{
+  "mongodb": "mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.muah1.mongodb.net/rfivDB?retryWrites=true&w=majority"
+}
+```
+where <USERNAME> and <PASSWORD> need to be replaced by the username and password of a database user (a new user can be added in MongoDB Atlas).
+
 In the project directory, you can run:
 
 ### `npm install`

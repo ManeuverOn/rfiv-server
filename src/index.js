@@ -7,9 +7,8 @@ const cors = require("cors");
 //////////////////////////////////////////////////////////////////////////////////
 
 const setupServer = async () => {
-  // get the app config (MongoDB Atlas connection and port)
+  // get the app config (MongoDB Atlas connection)
   const conf = require("../config.json");
-  const port = conf.port;
 
   // setup Express
   let app = express();
@@ -51,7 +50,7 @@ const setupServer = async () => {
   });
 
   // run the server on specified port
-  let server = app.listen(port, () => {
+  let server = app.listen(8080, () => {
     console.log(`RFIV listening on: ${server.address().port}`);
   });
 };
