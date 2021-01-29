@@ -1,0 +1,4 @@
+{
+  "mongodb": "mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.muah1.mongodb.net/rfivDB?retryWrites=true&w=majority",
+  "port": 8080
+}
