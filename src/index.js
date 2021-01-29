@@ -8,7 +8,7 @@ const cors = require("cors");
 
 const setupServer = async () => {
   // get the app config (MongoDB Atlas connection and port)
-  const conf = require("../config/config.json");
+  const conf = require("../config.json");
   const port = conf.port;
 
   // setup Express
