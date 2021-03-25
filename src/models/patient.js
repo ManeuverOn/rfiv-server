@@ -10,7 +10,7 @@ let Patient = new Schema({
   name: { type: String, required: true },
   id: { type: String, required: true, index: { unique: true } },
   tagId: { type: String, index: { unique: true } },
-  locations: [[String]],
+  locations: [[]],
 });
 
 Patient.pre("validate", function (next) {
