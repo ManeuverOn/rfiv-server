@@ -80,7 +80,7 @@ module.exports = (app) => {
         res.status(404).send({ error: `Patient.get failure: ${err}` });
       }
     } else {
-      res.status(404).send({ error: "Invalid query." });
+      res.status(400).send({ error: "Invalid query." });
     }
   });
 
@@ -92,7 +92,7 @@ module.exports = (app) => {
    */
   app.get("/v1/patient/:id", async (req, res) => {
     const id = req.params.id;
-    // find one patient with this ID value
+    // find patient with this ID value
     try {
       let patient = await app.models.Patient.findOne({ id });
       if (!patient) {
@@ -103,6 +103,47 @@ module.exports = (app) => {
       }
     } catch (err) {
       res.status(404).send({ error: `Patient.get failure: ${err}` });
+    }
+  });
+
+  /**
+   * Edit a patient's info
+   *
+   * @param {req.params.id} ID of patient
+   * @param {req.body.name} New name
+   * @param {req.body.tagId} New Tag ID
+   * @return {200 with {name, ID tag ID}} return new patient name, ID, and/or tag ID
+   */
+  app.put("/v1/patient/:id", async (req, res) => {
+    let data;
+    try {
+      // validate user input
+      let schema = Joi.object().keys({
+        name: Joi.string(),
+        tagId: Joi.string()
+      });
+      data = await schema.validateAsync(req.body);
+    } catch (err) {
+      const message = err.details[0].message;
+      return res.status(400).send({ error: message });
+    }
+
+    // update patient info
+    if (!isEmpty(data)) {
+      const id = req.params.id;
+      // find patient entry with this ID and update relevant info
+      let patient = await app.models.Patient.findOneAndUpdate(
+        { id },
+        { $set: data }
+      );
+      if (!patient) {
+        // ID doesn't exist
+        res.status(404).send({ error: "ID not found." });
+      } else {
+        res.status(204).send();
+      }
+    } else {
+      res.status(400).send({ error: "Invalid query." });
     }
   });
 
