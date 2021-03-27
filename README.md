@@ -26,17 +26,21 @@ Starts the server.
 
 This code creates several API endpoints for saving and retrieving patient data from a MongoDB Atlas database. From the host `http://localhost:8080`, you can run:
 
+### `POST /v1/patient`
+
+Creates a new patient entry with the name, patient ID, and tag ID specified in the request body.
+
 ### `GET /v1/patients?name=&id=&tagId=`
 
-Returns patient entries that have names, patient IDs, and tag IDs that match the query strings.
+Returns patient entries that have names, patient IDs, and/or tag IDs that match the query strings.
 
 ### `GET /v1/patient/:id`
 
 Returns the patient entry that has the specified patient ID parameter.
 
-### `POST /v1/patient`
+### `PUT /v1/patient/:id`
 
-Creates a new patient entry with the name, patient ID, and tag ID specified in the request body.
+Edits the name and/or tag ID of the patient entry associated with the specified patient ID parameter.
 
 ### `POST /v1/patient/:tagId/location`
 
