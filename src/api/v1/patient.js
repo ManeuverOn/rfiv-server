@@ -120,7 +120,7 @@ module.exports = (app) => {
       // validate user input
       let schema = Joi.object().keys({
         name: Joi.string(),
-        tagId: Joi.string()
+        tagId: Joi.string(),
       });
       data = await schema.validateAsync(req.body);
     } catch (err) {
@@ -160,7 +160,7 @@ module.exports = (app) => {
     try {
       // validate user input
       let schema = Joi.object().keys({
-        timestamp: Joi.string().required(),
+        timestamp: Joi.number().required(),
         location: Joi.string().required(),
       });
       data = await schema.validateAsync(req.body);
@@ -169,19 +169,41 @@ module.exports = (app) => {
       return res.status(400).send({ error: message });
     }
 
+    // try to save location
     try {
+      // get the patient entry with this tag ID
       const tagId = req.params.tagId;
-      console.log(tagId);
-      // find patient entry with this tag ID and add new tracking point to location
-      let patient = await app.models.Patient.findOneAndUpdate(
-        { tagId },
-        { $push: { locations: [data.timestamp, data.location] } }
-      );
-      if (!patient) {
-        // tag ID doesn't exist
-        res.status(404).send({ error: "Tag ID not found." });
+      let patient = await app.models.Patient.findOne({ tagId });
+
+      // if the tag is associated with a patient, save to database
+      if (patient) {
+        // get the last location/time if it exists
+        let lastLocation = [0, ""];
+        if (patient.locations.length > 0) {
+          lastLocation = patient.locations[patient.locations.length - 1];
+        }
+
+        // if the current location is different from the last location, add it to the database
+        // or if it's been over 120 seconds regardless of the location, add it to the database
+        // otherwise, don't add it to save space in database
+        if (
+          data.location !== lastLocation[1] ||
+          data.timestamp - lastLocation[0] > 120000
+        ) {
+          await app.models.Patient.updateOne(
+            { _id: patient._id },
+            { $push: { locations: [data.timestamp, data.location] } }
+          );
+          res.status(204).send();
+        } else {
+          return res.status(405).send({
+            error: `The tag (${tagId}) was recently read in this location.`,
+          });
+        }
       } else {
-        res.status(204).send();
+        res
+          .status(404)
+          .send({ error: `This tag (${tagId}) is not in the database.` });
       }
     } catch (err) {
       res.status(400).send({ error: `Patient.post failure: ${err}` });

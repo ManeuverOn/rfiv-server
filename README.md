@@ -22,7 +22,7 @@ Installs the necessary packages.
 
 Starts the server.
 
-## Available APIs
+## Available API Endpoints
 
 This code creates several API endpoints for saving and retrieving patient data from a MongoDB Atlas database. From the host `http://localhost:8080`, you can run:
 
@@ -45,6 +45,8 @@ Edits the name and/or tag ID of the patient entry associated with the specified 
 ### `POST /v1/patient/:tagId/location`
 
 Adds a location datapoint to a patient entry associated with the specified tag ID parameter.
+
+Note: This endpoint is currently unused because the RFID readers are directly interacting with the database. This was done because the server is running on a local server, which the readers cannot connect to; however, if the server is put on the Internet in the future, the use of this endpoint is preferred.
 
 ## Interaction with the User Interface
 
