@@ -61,7 +61,7 @@ module.exports = (app) => {
 
       // name search is case insensitive
       const nameCaseInsensitive = new RegExp(name, "i");
-      const query = { name: nameCaseInsensitive, id, tagId };
+      const query = { name: nameCaseInsensitive, id, tagId: new RegExp(tagId) };
       // remove empty query strings
       for (let field in query) {
         if (query[field] === "" || query[field] === undefined) {
@@ -131,16 +131,24 @@ module.exports = (app) => {
     // update patient info
     if (!isEmpty(data)) {
       const id = req.params.id;
-      // find patient entry with this ID and update relevant info
-      let patient = await app.models.Patient.findOneAndUpdate(
-        { id },
-        { $set: data }
-      );
-      if (!patient) {
-        // ID doesn't exist
-        res.status(404).send({ error: "ID not found." });
-      } else {
-        res.status(204).send();
+      try {
+        // find patient entry with this ID and update relevant info
+        let patient = await app.models.Patient.findOneAndUpdate(
+          { id },
+          { $set: data }
+        );
+        if (!patient) {
+          // ID doesn't exist
+          res.status(404).send({ error: "ID not found." });
+        } else {
+          res.status(204).send();
+        }
+      } catch (err) {
+        if (err.code === 11000) {
+          // duplicate tag ID
+          if (err.message.indexOf("tagId_1") !== -1)
+            res.status(400).send({ error: "Tag ID already in use" });
+        }
       }
     } else {
       res.status(400).send({ error: "Invalid query." });
