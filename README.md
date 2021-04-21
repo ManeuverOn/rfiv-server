@@ -1,6 +1,6 @@
 # rfiv-server
 
-## Available Scripts
+## Setup
 
 `Note`: Node.js is required to run this code. Download it at https://nodejs.org/en/.
 
