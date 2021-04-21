@@ -59,9 +59,14 @@ module.exports = (app) => {
       const id = req.query.id;
       const tagId = req.query.tagId;
 
-      // name search is case insensitive
-      const nameCaseInsensitive = new RegExp(name, "i");
-      const query = { name: nameCaseInsensitive, id, tagId: new RegExp(tagId) };
+      // search by name is case insensitive
+      // search is "contains" search instead of "starts with"
+      const query = {
+        name: new RegExp(name, "i"),
+        id: new RegExp(id),
+        tagId: new RegExp(tagId),
+      };
+
       // remove empty query strings
       for (let field in query) {
         if (query[field] === "" || query[field] === undefined) {
@@ -70,17 +75,22 @@ module.exports = (app) => {
       }
       // find all patient entries that match these query fields
       try {
-        let patient = await app.models.Patient.find(query);
-        if (patient.length === 0) {
-          res.status(404).send({ error: "Patient not found." });
+        let patients = await app.models.Patient.find(query);
+        if (patients.length === 0) {
+          res
+            .status(404)
+            .send({ error: "No patients found.", query: { name, id, tagId } });
         } else {
-          res.status(200).send(patient);
+          res.status(200).send({ patients, query: { name, id, tagId } });
         }
       } catch (err) {
-        res.status(404).send({ error: `Patient.get failure: ${err}` });
+        res.status(404).send({
+          error: `Patients.get failure: ${err}`,
+          query: { name, id, tagId },
+        });
       }
     } else {
-      res.status(400).send({ error: "Invalid query." });
+      res.status(400).send({ error: "Empty query." });
     }
   });
 
