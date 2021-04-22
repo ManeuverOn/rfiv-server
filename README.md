@@ -12,7 +12,7 @@
 ```
 where `<connection_string>` is the connection string to a MongoDB database. Our connection string is in the form `mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.muah1.mongodb.net/rfivDB?retryWrites=true&w=majority`, where `<USERNAME>` and `<PASSWORD>` are the username and password of a database user, respectively.
 
-In the project directory, you can run:
+In the project directory, run the following commands in the terminal:
 
 ### `npm install`
 
@@ -24,29 +24,29 @@ Starts the server.
 
 ## Available API Endpoints
 
-This code creates several API endpoints for saving and retrieving patient data from a MongoDB Atlas database. From the host `http://localhost:8080`, you can run:
+This code creates several API endpoints for saving and retrieving patient data from a MongoDB Atlas database. From the host `http://localhost:8080`, the following endpoints are available:
 
-### `POST /v1/patient`
+* `POST /v1/patient`
 
-Creates a new patient entry with the name, patient ID, and tag ID specified in the request body.
+  Creates a new patient entry with the name, patient ID, and tag ID specified in the request body.
 
-### `GET /v1/patients?name=&id=&tagId=`
+* `GET /v1/patients?name=&id=&tagId=`
 
-Returns patient entries that have names, patient IDs, and/or tag IDs that match the query strings.
+  Returns patient entries that have names, patient IDs, and/or tag IDs that match the query strings.
 
-### `GET /v1/patient/:id`
+* `GET /v1/patient/:id`
 
-Returns the patient entry that has the specified patient ID parameter.
+  Returns the patient entry that has the specified patient ID parameter.
 
-### `PUT /v1/patient/:id`
+* `PUT /v1/patient/:id`
 
-Edits the name and/or tag ID of the patient entry associated with the specified patient ID parameter.
+  Edits the name and/or tag ID of the patient entry associated with the specified patient ID parameter.
 
-### `POST /v1/patient/:tagId/location`
+* `POST /v1/patient/:tagId/location`
 
-Adds a location datapoint to a patient entry associated with the specified tag ID parameter.
+  Adds a location datapoint to a patient entry associated with the specified tag ID parameter.
 
-Note: This endpoint is currently unused because the RFID readers are directly interacting with the database. This was done because the server is running on a local server, which the readers cannot connect to; however, if the server is put on the Internet in the future, the use of this endpoint is preferred.
+  Note: This endpoint is currently unused because the RFID readers are directly interacting with the database. This was done because the server is running on a local server, which the readers cannot connect to; however, if the server is put on the Internet in the future, the use of this endpoint is preferred.
 
 ## Interaction with the User Interface
 
