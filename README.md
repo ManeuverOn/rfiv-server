@@ -12,7 +12,7 @@ This code creates several API endpoints for saving and retrieving patient data f
   "mongodb": "<connection_string>"
 }
 ```
-where `<connection_string>` is the connection string to a MongoDB database. Our connection string is in the form `mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.muah1.mongodb.net/rfivDB?retryWrites=true&w=majority`, where `<USERNAME>` and `<PASSWORD>` are the username and password of a database user, respectively, and the name of the database is "rfivDB".
+where `<connection_string>` is the connection string to a MongoDB database. Our connection string is in the form `mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.muah1.mongodb.net/rfivDB?retryWrites=true&w=majority`, where `<USERNAME>` and `<PASSWORD>` are the username and password of a database user, respectively, and the name of the database is "rfivDB". We used [Mongoose](https://mongoosejs.com/) to connect to the database. See the [docs](https://mongoosejs.com/docs/connections.html) for more info.
 
 In the project directory, run the following commands in the terminal:
 
