@@ -51,7 +51,8 @@ module.exports = (app) => {
    * @param {req.query.name} Name of patient
    * @param {req.query.id} ID of patient
    * @param {req.query.tagId} ID of RFIV Tag
-   * @return {200 with { name, ID, tag ID }} return patient names, IDs, and tag IDs
+   * @return {200 with { patients: [{ name, ID, tag ID }], query: { name, ID, tag ID} }}
+   *         return list of patient names, IDs, and tag IDs and the search query
    */
   app.get("/v1/patients", async (req, res) => {
     if (!isEmpty(req.query)) {
@@ -101,7 +102,7 @@ module.exports = (app) => {
    * Search for a patient entry by patient id
    *
    * @param {req.params.id} ID of patient
-   * @return {200 with { name, ID, tag ID }} return patient name, ID, and tag ID
+   * @return {200 with { patient: { name, ID, tag ID }}} return patient name, ID, and tag ID
    */
   app.get("/v1/patient/:id", async (req, res) => {
     const id = req.params.id;
@@ -126,7 +127,7 @@ module.exports = (app) => {
    * @param {req.params.id} ID of patient
    * @param {req.body.name} New name
    * @param {req.body.tagId} New Tag ID
-   * @return {200 with {name, ID tag ID}} return new patient name, ID, and/or tag ID
+   * @return {204, no body content} return status only
    */
   app.put("/v1/patient/:id", async (req, res) => {
     let data;
@@ -175,7 +176,7 @@ module.exports = (app) => {
    * @param {req.params.tagId} Tag ID of patient
    * @param {req.body.timestamp} time of tracker reading
    * @param {req.body.location} location of tracker reading
-   * @return {204, no body content} Return status only
+   * @return {204, no body content} return status only
    */
   app.post("/v1/patient/:tagId/location", async (req, res) => {
     let data;
