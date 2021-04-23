@@ -73,14 +73,17 @@ module.exports = (app) => {
           delete query[field];
         }
       }
+
       // find all patient entries that match these query fields
       try {
         let patients = await app.models.Patient.find(query);
         if (patients.length === 0) {
+          // no patients found
           res
             .status(404)
             .send({ error: "No patients found.", query: { name, id, tagId } });
         } else {
+          // send list of patients and the search query
           res.status(200).send({ patients, query: { name, id, tagId } });
         }
       } catch (err) {
@@ -109,7 +112,8 @@ module.exports = (app) => {
         // patient doesn't exist
         res.status(404).send({ error: `Patient not found.` });
       } else {
-        res.status(200).send(patient);
+        // send patient document
+        res.status(200).send({ patient });
       }
     } catch (err) {
       res.status(404).send({ error: `Patient.get failure: ${err}` });
@@ -166,7 +170,7 @@ module.exports = (app) => {
   });
 
   /**
-   * Add a location to a patient associated with a tag ID
+   * Add a location to a patient associated with a tag ID (currently unused)
    *
    * @param {req.params.tagId} Tag ID of patient
    * @param {req.body.timestamp} time of tracker reading
@@ -214,11 +218,13 @@ module.exports = (app) => {
           );
           res.status(204).send();
         } else {
+          // tag was read too soon
           return res.status(405).send({
             error: `The tag (${tagId}) was recently read in this location.`,
           });
         }
       } else {
+        // tag not found in database
         res
           .status(404)
           .send({ error: `This tag (${tagId}) is not in the database.` });

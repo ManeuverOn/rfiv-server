@@ -5,7 +5,10 @@ const Schema = mongoose.Schema;
 
 /***************** Patient Model *******************/
 
-/* Schema for patient */
+// Schema for patient
+// Each patient has a name, a patient ID given by the hospital,
+// a tag ID corresponding to an RFIV, and an array of locations
+// which will hold locations in the form [timestamp, location]
 let Patient = new Schema({
   name: { type: String, required: true },
   id: { type: String, required: true, index: { unique: true } },

@@ -1,5 +1,7 @@
 # rfiv-server
 
+This code creates several API endpoints for saving and retrieving patient data from a MongoDB Atlas database. The API code is located in [src/api](src/api), and the patient document schema for MongoDB is located in [src/models](src/models).
+
 ## Setup
 
 `Note`: Node.js is required to run this code. Download it at https://nodejs.org/en/.
@@ -10,7 +12,7 @@
   "mongodb": "<connection_string>"
 }
 ```
-where `<connection_string>` is the connection string to a MongoDB database. Our connection string is in the form `mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.muah1.mongodb.net/rfivDB?retryWrites=true&w=majority`, where `<USERNAME>` and `<PASSWORD>` are the username and password of a database user, respectively.
+where `<connection_string>` is the connection string to a MongoDB database. Our connection string is in the form `mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.muah1.mongodb.net/rfivDB?retryWrites=true&w=majority`, where `<USERNAME>` and `<PASSWORD>` are the username and password of a database user, respectively, and the name of the database is `rfivDB`.
 
 In the project directory, run the following commands in the terminal:
 
@@ -24,7 +26,7 @@ Starts the server.
 
 ## Available API Endpoints
 
-This code creates several API endpoints for saving and retrieving patient data from a MongoDB Atlas database. From the host `http://localhost:8080`, the following endpoints are available:
+From the host `http://localhost:8080`, the following endpoints are available:
 
 * `POST /v1/patient`
 
