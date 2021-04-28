@@ -12,7 +12,7 @@ This code creates several API endpoints for saving and retrieving patient data f
   "mongodb": "<connection_string>"
 }
 ```
-where `<connection_string>` is the connection string to a MongoDB database. Our connection string is in the form `mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.muah1.mongodb.net/rfivDB?retryWrites=true&w=majority`, where `<USERNAME>` and `<PASSWORD>` are the username and password of a database user, respectively, and the name of the database is "rfivDB". We used [Mongoose](https://mongoosejs.com/) to connect to the database. See the [docs](https://mongoosejs.com/docs/connections.html) for more info.
+where `<connection_string>` is the connection string to a MongoDB database. Our connection string is in the form `mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.muah1.mongodb.net/rfivDB?retryWrites=true&w=majority`, where `<USERNAME>` and `<PASSWORD>` are the username and password of a database user, respectively, and the name of the database is "rfivDB". We used [Mongoose](https://mongoosejs.com/) to connect to the database. If there isn't already a database called "rfivDB" in your MongoDB, Mongoose will create one for you along with a collection called "patients" after you save the first document (which is done by creating a new patient). See the [docs](https://mongoosejs.com/docs/connections.html) and [this post](https://stackoverflow.com/a/51527319) for more info.
 
 In the project directory, run the following commands in the terminal:
 
