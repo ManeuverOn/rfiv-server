@@ -1,6 +1,6 @@
 # rfiv-server
 
-This code creates several API endpoints for saving and retrieving patient data from a MongoDB Atlas database. The API code is located in [src/api](src/api), and the patient document schema for MongoDB is located in [src/models](src/models).
+This code creates several API endpoints for saving and retrieving patient data from a MongoDB Atlas database. The API code is located in [src/api](src/api), and the patient document schema for MongoDB is located in [src/models](src/models). The main server logic is located in [src/index.js](src/index.js).
 
 ## Setup
 
